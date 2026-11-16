@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f8f7f3">
+  <title>光盘档案 · BD 备份检索</title>
+  <link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="侧栏">
+      <button class="brand" type="button" data-route="home" aria-label="光盘档案，返回主页">
+        <span class="brand-mark"><i class="icon i-disc" aria-hidden="true"></i></span>
+        <span><strong>光盘档案</strong><small>BD ARCHIVE</small></span>
+      </button>
+
+      <p class="side-label">资料库</p>
+      <nav class="side-nav" aria-label="资料库">
+        <button type="button" class="side-link" data-route="home"><i class="icon i-home" aria-hidden="true"></i>总览</button>
+        <button type="button" class="side-link" data-route="discs"><i class="icon i-disc" aria-hidden="true"></i>光盘内容详情</button>
+        <button type="button" class="side-link" data-route="folders"><i class="icon i-folder" aria-hidden="true"></i>文件夹视图</button>
+      </nav>
+
+      <p class="side-label">管理</p>
+      <nav class="side-nav" aria-label="管理">
+        <button type="button" class="side-link" data-action="history"><i class="icon i-clock" aria-hidden="true"></i>补标记历史</button>
+      </nav>
+
+      <div class="side-footer">
+        <span class="local-dot" aria-hidden="true"></span>
+        <span><strong>本地资料库</strong><small id="connection-status">正在连接 SQLite…</small></span>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="window-bar">
+        <nav class="browser-tabs" aria-label="页面标签">
+          <button class="browser-tab" type="button" data-route="home"><i class="icon i-home" aria-hidden="true"></i>主页</button>
+          <button class="browser-tab" type="button" data-route="discs"><i class="icon i-disc" aria-hidden="true"></i>光盘内容详情</button>
+        </nav>
+        <span class="window-caption"><i class="icon i-lock" aria-hidden="true"></i>仅本机访问</span>
+      </header>
+
+      <main id="main">
+        <section id="home" class="page" aria-labelledby="home-title">
+          <div class="hero">
+            <div class="hero-copy">
+              <p class="eyebrow"><span></span>个人备份库</p>
+              <h1 id="home-title">光盘总览</h1>
+              <p class="hero-description">查找备份文件，看看它们存在哪张光盘。</p>
+            </div>
+            <div class="disc-art" aria-hidden="true">
+              <div class="art-orbit"></div>
+              <div class="art-medium"><span></span></div>
+              <span class="art-spark art-spark-one"></span><span class="art-spark art-spark-two"></span>
+              <span class="art-dot art-dot-one"></span><span class="art-dot art-dot-two"></span>
+            </div>
+          </div>
+
+          <div class="stats" id="stats" aria-label="库容统计">
+            <article class="stat"><span class="stat-icon"><i class="icon i-disc" aria-hidden="true"></i></span><p>已刻录光盘</p><div class="stat-value"><strong id="burned-count">—</strong><span>张</span></div><small>来自已刻录归档</small></article>
+            <article class="stat"><span class="stat-icon"><i class="icon i-stack" aria-hidden="true"></i></span><p>已刻录容量</p><div class="stat-value"><strong id="burned-capacity">—</strong><span id="burned-unit">GB</span></div><small id="burned-detail">按文件实际大小统计</small></article>
+            <article class="stat"><span class="stat-icon"><i class="icon i-file" aria-hidden="true"></i></span><p>已索引文件</p><div class="stat-value"><strong id="indexed-count">—</strong><span>个</span></div><small>包含待刻录目录</small></article>
+          </div>
+
+          <section class="card search-card" aria-labelledby="search-title">
+            <div class="section-heading">
+              <div><h2 id="search-title">检索文件</h2><p>从已索引的光盘中查找备份。</p></div>
+              <div class="segmented" aria-label="搜索方式">
+                <button type="button" data-search-mode="name" aria-pressed="true">按文件名搜索</button>
+                <button type="button" data-search-mode="date" aria-pressed="false">按日期搜索</button>
+              </div>
+            </div>
+            <form class="search-form" id="search-form">
+              <div id="search-by-name" class="search-input"><i class="icon i-search" aria-hidden="true"></i><input id="name-query" aria-label="文件名关键词" placeholder="输入文件名或关键词" type="search" maxlength="300"></div>
+              <div id="search-by-date" class="date-inputs" hidden>
+                <label>从<input id="date-from" type="date" aria-label="起始修改日期"></label>
+                <label>到<input id="date-to" type="date" aria-label="结束修改日期"></label>
+              </div>
+              <button class="btn primary search-submit" type="submit"><i class="icon i-search" aria-hidden="true"></i>搜索</button>
+            </form>
+            <div id="search-results" aria-live="polite"></div>
+          </section>
+
+          <section class="card collection-card" aria-labelledby="collection-title">
+            <div class="section-heading">
+              <div><h2 id="collection-title">光盘编号</h2><p id="collection-caption">BD-1 至 BD-60</p></div>
+              <button class="btn secondary" type="button" data-action="relabel"><i class="icon i-edit" aria-hidden="true"></i>补标记光盘</button>
+            </div>
+            <div class="disc-progress" id="status-bar" aria-label="编号状态"></div>
+            <div class="collection-footer">
+              <div class="status-legend" id="status-legend"></div>
+              <button class="text-button" type="button" data-route="discs">浏览光盘 <i class="icon i-arrow" aria-hidden="true"></i></button>
+            </div>
+          </section>
+        </section>
+
+        <section id="details" class="page" aria-labelledby="details-title" hidden>
+          <div class="detail-intro">
+            <p class="eyebrow"><span></span>备份索引</p>
+            <h1 id="details-title">光盘内容详情</h1>
+            <p class="hero-description" id="detail-description">按光盘编号浏览备份内容和备注。</p>
+          </div>
+          <div class="view-controls">
+            <div class="segmented" aria-label="内容视图">
+              <button type="button" data-view="discs" aria-pressed="true"><i class="icon i-tree" aria-hidden="true"></i>光盘树</button>
+              <button type="button" data-view="folders" aria-pressed="false"><i class="icon i-folder" aria-hidden="true"></i>文件夹视图</button>
+            </div>
+            <div id="disc-filters"><label class="select-label" for="status-filter">状态</label><select id="status-filter"><option value="all">全部编号</option><option value="burned">已刻录</option><option value="pending">待刻录</option><option value="empty">未登记</option></select></div>
+          </div>
+          <div id="disc-tree"></div>
+          <div id="explorer" class="card explorer" hidden></div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
