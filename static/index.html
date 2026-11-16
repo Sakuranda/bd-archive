@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <meta name="theme-color" content="#f8f7f3">
+  <meta name="theme-color" content="#f5f8fe">
   <title>光盘档案 · BD 备份检索</title>
+  <link rel="icon" href="/disc.ico" sizes="any">
+  <script src="/theme.js"></script>
   <link rel="stylesheet" href="/app.css">
   <script src="/app.js" defer></script>
 </head>
@@ -41,7 +42,17 @@
           <button class="browser-tab" type="button" data-route="home"><i class="icon i-home" aria-hidden="true"></i>主页</button>
           <button class="browser-tab" type="button" data-route="discs"><i class="icon i-disc" aria-hidden="true"></i>光盘内容详情</button>
         </nav>
-        <span class="window-caption"><i class="icon i-lock" aria-hidden="true"></i>仅本机访问</span>
+        <div class="window-tools">
+          <span class="window-caption"><i class="icon i-lock" aria-hidden="true"></i>仅本机访问</span>
+          <label class="theme-picker" for="theme-select">
+            <i class="icon i-theme" aria-hidden="true"></i><span class="theme-label">主题</span>
+            <select id="theme-select" aria-label="主题">
+              <option value="blue">蓝白</option>
+              <option value="warm">暖色</option>
+              <option value="dark">深色</option>
+            </select>
+          </label>
+        </div>
       </header>
 
       <main id="main">
